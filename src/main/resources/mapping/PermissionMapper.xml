@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mapping映射规范
+   1、mapper节点的namespace书写
+   2、resultMape作用
+   3、sql指令，它的参数包括id、parametermap/type、resultMap/type
+-->
+<mapper namespace="com.qf.mapper.PermissionMapper">
+    <!--加载所有的权限信息-->
+    <select id="loadAllPermission" resultType="com.qf.pojo.Permission">
+        select * from permission
+    </select>
+</mapper>

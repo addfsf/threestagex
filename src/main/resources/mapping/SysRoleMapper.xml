@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mapping映射规范
+   1、mapper节点的namespace书写
+   2、resultMape作用
+   3、sql指令，它的参数包括id、parametermap/type、resultMap/type
+-->
+<mapper namespace="com.qf.mapper.SysRoleMapper">
+    <!--加载所有的角色信息-->
+    <select id="loadAllRole" resultType="com.qf.pojo.SysRole">
+        select
+        *
+         from
+          tb_role
+    </select>
+
+    <!--通过用户id加载对应的角色信息-->
+    <select id="loadRoleByUserId" parameterType="int" resultType="com.qf.pojo.SysRole">
+        select
+         *
+          from
+           tb_role where
+            roleId
+             in
+             (select
+             roleId
+             from
+             tb_user_role
+             where
+             userId=#{userId})
+    </select>
+
+    <!--通过角色名查询角色id-->
+    <select id="getRoleIdByRoleName" parameterType="string" resultType="int">
+        select
+         roleId
+          from
+           tb_role
+           where
+           roleName=#{roleName}
+    </select>
+
+    <!--添加新的用户角色关系到关系表中-->
+    <insert id="addDistribute" parameterType="com.qf.pojo.User_Role">
+        insert
+         into
+         tb_user_role
+         values
+         (#{userId},#{roleId})
+    </insert>
+    <!--添加新的用户角色关系到关系表中-->
+    <insert id="addDistributes" parameterType="String">
+        insert
+         into
+         tb_user_role
+         values
+         (#{uu})
+    </insert>
+
+    <!--删除对应的用户角色关系数据-->
+    <delete id="delDistribute" parameterType="com.qf.pojo.User_Role">
+        delete
+         from
+          tb_user_role
+           where
+            userId=#{userId}
+             and
+             roleId=#{roleId}
+    </delete>
+</mapper>

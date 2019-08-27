@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="UTF-8" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        #footer {
+            padding: 15px 0;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+        #topcontrol {
+            color: #fff;
+            z-index: 99;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            background: #222;
+            position: relative;
+            right: 14px !important;
+            bottom: 11px !important;
+            border-radius: 3px !important;
+        }
+
+        #topcontrol:after {
+            /*top: -2px;*/
+            left: 8.5px;
+            content: "\f106";
+            position: absolute;
+            text-align: center;
+            font-family: FontAwesome;
+        }
+
+        #topcontrol:hover {
+            color: #fff;
+            background: #18ba9b;
+            -webkit-transition: all 0.3s ease-in-out;
+            -moz-transition: all 0.3s ease-in-out;
+            -o-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+        }
+
+    </style>
+</head>
+<body>
+<div class="navbar-wrapper">
+    <div class="container">
+        <nav style="background-color: #428bca;" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html" style="font-size:32px;color: #2b542c">中兴财富-个人账户</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse" style="float:right;">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" style="color: #0f0f0f"><i class="glyphicon glyphicon-user"></i><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="member.html"><i class="glyphicon glyphicon-scale"></i> 会员中心</a></li>
+                                <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+                                <li class="divider"></li>
+                                <li><a href="index.html"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </div>
+</div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-sm-3 col-md-3 column">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="thumbnail" style="border-radius: 0px;">
+                        <img src="img/services-box1.jpg" class="img-thumbnail" alt="A generic square placeholder image with a white border around it, making it resemble a photograph taken with an old instant camera">
+                        <div class="caption" style="text-align:center;">
+                            <h3 th:text="${loginName}">
+                            </h3>
+                            <a class="label label-danger" th:href="@{accttype(loginName=${loginName})}" style="cursor:pointer;" th:text="${apply.state}"></a>
+                            <span class="label label-danger" style="cursor:pointer;" onclick="window.location.href='accttype.html'"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="list-group">
+                <div class="list-group-item active">
+                    <!--我的业务<span class="badge"><i class="glyphicon glyphicon-chevron-right"></i></span>-->
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9 col-md-9 column">
+            <ul id="myTab" style="" class="nav nav-pills" role="tablist">
+                <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">我的投资</a></li>
+                <li role="presentation"><a href="#profile">我的贷款</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content" style="margin-top:10px;">
+                <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
+
+                    <ul id="myTab1" class="nav nav-tabs">
+                        <li role="presentation" class="active"><a href="#support">我投资的</a></li>
+                        <li role="presentation"><a href="#attension">我关注的</a></li>
+                        <li class=" pull-right">
+                            <input id="uss" th:value="${loginName}" type="hidden"/>
+                            <button type="button" class="btn btn-warning" onclick="window.location.href='indexx'">主页逛逛</button>
+                            <button id="invests" type="button" class="btn btn-warning">继续投资</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location.href='borrow'">我要贷款</button>
+                        </li>
+                    </ul>
+                    <div id="myTab1" class="tab-content" style="margin-top:10px;">
+                        <div role="tabpanel" class="tab-pane fade active in" id="support" aria-labelledby="home-tab">
+                            <div class="container-fluid">
+                                <div class="row clearfix">
+                                    <div class="col-md-12 column" style="margin-top:10px;padding:0;">
+                                        <table class="table table-bordered" style="text-align:center;">
+                                            <thead>
+                                            <tr style="background-color:#ddd;">
+                                                <td>项目信息</td>
+                                                <td width="90">年收益</td>
+                                                <td width="120">还款方式（元）</td>
+                                                <td width="80">剩余天数（天）</td>
+                                                <td width="80">募集资金</td>
+                                                <td width="120">状态</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="t:${tzs}">
+                                                <td style="vertical-align:middle;">
+                                                    <div class="thumbnail">
+                                                        <div class="caption">
+                                                            <h3>
+
+                                                            </h3>
+                                                            <p th:text="${t.itemName}">
+                                                            </p>
+                                                            <p>
+                                                            <div style="float:left;"><i class="glyphicon glyphicon-screenshot" title="目标金额" ></i> 已完成 100% </div>
+                                                            <div style="float:right;"><i title="截至日期" class="glyphicon glyphicon-calendar"></i> 剩余8天 </div>
+                                                            </p>
+                                                            <br>
+                                                            <div class="progress" style="margin-bottom: 4px;">
+                                                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                                                    <span >收益中</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="vertical-align:middle;" th:text="${t.rewardYear}"></td>
+                                                <td style="vertical-align:middle;" th:text="${t.backFunction}"><br></td>
+                                                <td style="vertical-align:middle;" th:text="${t.residueDay}"></td>
+                                                <td style="vertical-align:middle;" th:text="${t.money}"></td>
+                                                <td style="vertical-align:middle;">
+                                                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                        <button type="button" class="btn btn-info">追加投资</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="attension" aria-labelledby="attension-tab">
+                            <div class="container-fluid">
+                                <div class="row clearfix">
+                                    <div class="col-md-12 column" style="padding:0;">
+                                        <table class="table table-bordered" style="text-align:center;">
+                                            <thead>
+                                            <tr style="background-color:#ddd;">
+                                                <td>项目信息</td>
+                                                <td width="90">年收益</td>
+                                                <td width="120">还款方式（元）</td>
+                                                <td width="80">剩余天数（天）</td>
+                                                <td width="80">募集资金</td>
+                                                <td width="120">状态</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="g:${gz}">
+                                                <td style="vertical-align:middle;">
+                                                    <div class="thumbnail">
+                                                        <div class="caption">
+                                                            <p th:text="${g.itemName}">
+                                                            </p>
+                                                            <p>
+                                                            </p>
+                                                            <p>
+                                                            <div style="float:left;"><i class="glyphicon glyphicon-screenshot" title="目标金额" ></i> 已完成 100% </div>
+                                                            <div style="float:right;"><i class="glyphicon glyphicon-calendar"></i> 剩余2天 </div>
+                                                            </p>
+                                                            <br>
+                                                            <div class="progress" style="margin-bottom: 4px;">
+                                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                                                    <span >投资中</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="vertical-align:middle;" th:text="${g.rewardYear}">1</td>
+                                                <td style="vertical-align:middle;" th:text="${g.backFunction}">1</td>
+                                                <td style="vertical-align:middle;" th:text="${g.residueDay}">1</td>
+                                                <td style="vertical-align:middle;" th:text="${g.money}">1</td>
+                                                <td style="vertical-align:middle;">
+                                                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                        <button id="b1" style="margin-top: 5px;" type="button" class="btn btn-primary">立即投资</button>
+                                                        <button id="b2" style="margin-top: 5px;" type="button" class="btn btn-info">取消关注</button>
+                                                        <input id="qx" type="hidden" th:value="${g.id}"/>
+                                                        <input id="yh" type="hidden" th:value="${loginName}"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+                    <ul id="myTab1" class="nav nav-tabs">
+                        <li role="presentation" class="active"><a href="#support">我的申请</a></li>
+                        <li class=" pull-right">
+                            <button type="button" class="btn btn-warning" onclick="window.location.href='indexx'">主页逛逛</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location.href='invest'">继续投资</button>
+                        </li>
+                    </ul>
+                    <div id="myTab1" class="tab-content" style="margin-top:10px;">
+                        <div role="tabpanel" class="tab-pane fade active in" id="support" aria-labelledby="home-tab">
+                            <div class="container-fluid">
+                                <div class="row clearfix">
+                                    <div class="col-md-12 column" style="margin-top:10px;padding:0;">
+                                        <table class="table table-bordered" style="text-align:center;">
+                                            <thead>
+                                            <tr style="background-color:#ddd;">
+                                                <td>申请人</td>
+                                                <td width="90">申请金额（元）)</td>
+                                                <td width="120">借款期限（月）</td>
+                                                <td width="80">支付宝账户</td>
+                                                <td width="80">担保方式</td>
+                                                <td width="120">状态</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="j:${jk}">
+                                                <td style="vertical-align:middle;">
+                                                    <div class="thumbnail" style="margin-top: 13px;">
+                                                            <p>
+                                                                <a th:text="${j.loginName}" style="font-size: 30px; color: #2c3e50"></a>
+                                                            </p>
+                                                            <br>
+                                                    </div>
+                                                </td>
+                                                <td style="vertical-align:middle;" th:text="${j.moneyx}"></td>
+                                                <td style="vertical-align:middle;" th:text="${j.times}"><br></td>
+                                                <td style="vertical-align:middle;" th:text="${j.zfbNumber}"></td>
+                                                <td style="vertical-align:middle;" th:text="${j.dbFunction}"></td>
+                                                <td style="vertical-align:middle;">
+                                                    <input class="x" type="hidden" th:value="${j.id}"/>
+                                                    <input class="cxyh" type="hidden" th:value="${loginName}"/>
+                                                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                                        <button type="button" class="btn btn-info" style="margin-top: 5px;">修改</button>
+                                                        <button type="button" class="btn btn-default" style="margin-top: 5px;">撤销</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" style="margin-top:20px;">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div id="footer">
+                <div class="footerNav">
+                    <a rel="nofollow" href="http://www.qf.com">关于我们</a> | <a rel="nofollow" href="http://www.qf.com">服务条款</a> | <a rel="nofollow" href="http://www.qf.com">免责声明</a> | <a rel="nofollow" href="http://www.qf.com">网站地图</a> | <a rel="nofollow" href="http://www.qf.com">联系我们</a>
+                </div>
+                <div class="copyRight">
+                    Copyright ?2017-2017qf.com 版权所有
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="jquery/jquery-2.1.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="script/docs.min.js"></script>
+<script src="script/back-to-top.js"></script>
+<script>
+    $("#invests").click(function () {
+        var loginName=$("#uss").val();
+        window,location.href="invest?loginName="+loginName;
+    });
+    $("#b2").click(function () {
+        /*要取消关注的*/
+        var id=$("#qx").val();
+        /*对应的用户*/
+        var loginName=$("#yh").val();
+        $.post("qxgz",{"id":id,"loginName":loginName},function (data) {
+            alert(data==true?"取消成功":"取消失败");
+            window.location.reload();
+        });
+    });
+    $(".btn-default").click(function () {
+        /*要撤销的贷款信息*/
+        var id=$(".x").val();
+        /*对应的用户*/
+        var loginName=$(".cxyh").val();
+        $.post("cxappl",{"id":id,"loginName":loginName},function (data) {
+            alert(data==true?"撤销成功":"撤销失败");
+            window.location.reload();
+        });
+    });
+    $('#myTab a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+    $('#myTab1 a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+</script>
+</body>
+</html>

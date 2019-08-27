@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mapping映射规范
+   1、mapper节点的namespace书写
+   2、resultMape作用
+   3、sql指令，它的参数包括id、parametermap/type、resultMap/type
+-->
+<mapper namespace="com.qf.mapper.SysPermissionMapper">
+    <!--加载所有的权限信息-->
+    <select id="loadAllPermissions" resultType="com.qf.pojo.SysPermission">
+        select
+         *
+         from
+          tb_permission
+    </select>
+
+    <!--通过角色id查询对应角色所用于的权限信息-->
+    <select id="loadSyspermissionByRid" parameterType="int" resultType="com.qf.pojo.SysPermission">
+        SELECT
+        *
+        FROM
+        tb_permission
+         WHERE
+         id IN
+         (SELECT
+         pid
+         FROM
+         tb_role_permission
+          WHERE
+          roleId=#{roleId})
+    </select>
+
+    <!--根据权限名查询权限id-->
+    <select id="loadIdByPerName" parameterType="string" resultType="int">
+        select id from tb_permission where perName=#{perName}
+    </select>
+
+    <!--获取当前列表的总行数-->
+    <select id="getCount" resultType="int">
+        select count(id) from tb_permission
+    </select>
+
+    <!--将新的角色权限关系添加到关系表中-->
+    <insert id="addNewRolePermission" parameterType="com.qf.pojo.Role_Permission">
+        insert into tb_role_permission values(#{roleId},#{pid})
+    </insert>
+
+    <!--将对应的角色权限关系从关系表删除-->
+    <delete id="reduceRolePermission" parameterType="com.qf.pojo.Role_Permission">
+        delete from tb_role_permission where roleId=#{roleId} and pid=#{pid}
+    </delete>
+</mapper>

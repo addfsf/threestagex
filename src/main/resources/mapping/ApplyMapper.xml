@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mapping映射规范
+   1、mapper节点的namespace书写
+   2、resultMape作用
+   3、sql指令，它的参数包括id、parametermap/type、resultMap/type
+-->
+<mapper namespace="com.qf.mapper.ApplyMapper">
+    <!--查询数据库中最大的id值-->
+    <select id="getMaxId" resultType="int">
+        select
+        max(id)
+        from
+        apply
+    </select>
+
+    <!--加载所有实名认证信息-->
+    <select id="loadAllApply" resultType="com.qf.pojo.Apply">
+        select
+         *
+          from
+           apply
+    </select>
+
+    <!--根据登录用户名查询当前用户对应的实名认证信息-->
+    <select id="loadByLoginName" parameterType="string" resultType="com.qf.pojo.Apply">
+        select * from apply where loginName=#{loginName}
+    </select>
+
+    <!--将新的实名认证信息添加到数据库中-->
+    <insert id="addNewApply" parameterType="com.qf.pojo.Apply">
+        insert
+        into
+        apply
+        values(
+        #{id},
+        #{loginName},
+        #{realName},
+        #{number},
+        #{adress},
+        #{page},
+        #{state})
+    </insert>
+
+    <!--根据实名认证id更新实名认证信息-->
+    <update id="upApplyByLoginName" parameterType="com.qf.pojo.Apply">
+        update apply set realName=#{realName},number=#{number},adress=#{adress},page=#{page} where id=#{id}
+    </update>
+
+    <!--通过实名认证信息的id修改对应实名认证信息的认证状态-->
+    <update id="changeState" parameterType="int">
+        update
+         apply
+         set
+          state="已实名"
+           where
+           id=#{id}
+    </update>
+</mapper>

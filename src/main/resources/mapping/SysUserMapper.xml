@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mapping映射规范
+   1、mapper节点的namespace书写
+   2、resultMape作用
+   3、sql指令，它的参数包括id、parametermap/type、resultMap/type
+-->
+<mapper namespace="com.qf.mapper.SysUserMapper">
+    <!--根据登录用户名查询用户的具体信息-->
+    <sql id="resultUser">
+        userId,
+        loginName,
+        password,
+        state,
+        createTime,
+        realName,
+        email
+    </sql>
+    <select id="loadSysUserByLoginName" parameterType="string"  resultType="com.qf.pojo.SysUser">
+        select
+         <include refid="resultUser"></include>
+          from
+           tb_user
+            where
+             loginName=#{loginName}
+    </select>
+
+    <!--根据登录的用户名查询对应的权限信息-->
+    <select id="loadSysPermissionByLoginName" parameterType="string" resultType="com.qf.pojo.SysPermission">
+      select
+            p.*
+        from
+            tb_user        u,
+            tb_role        r,
+            tb_permission  p,
+            tb_user_role       ur,
+            tb_role_permission rp
+        where
+            u.userId = ur.userId
+            and ur.roleId = r.roleId
+            and r.roleId = rp.roleId
+            and rp.pId = p.id
+            and u.loginName=#{loginName}
+    </select>
+
+    <!--通过用户id加载对应的用户信息-->
+    <select id="loadByUserId" parameterType="int" resultType="com.qf.pojo.SysUser">
+        select
+         *
+          from
+          tb_user
+          where
+          userId=#{userId}
+    </select>
+
+    <!--加载所有的用户信息-->
+    <select id="loadAllSysUser" resultType="com.qf.pojo.SysUser">
+        select
+         *
+          from
+           tb_user
+    </select>
+
+    <!--获取最大的id-->
+    <select id="getMaxId" resultType="int">
+        select
+         max(userId)
+         from
+          tb_user
+    </select>
+
+    <!--根据字段进行模糊查询-->
+    <select id="mhSeacher" parameterType="string" resultType="com.qf.pojo.SysUser">
+        select
+         *
+          from
+          tb_user
+          where
+          loginName
+          like
+          "%"#{mh}"%"
+          or
+          email
+          like
+          "%"#{mh}"%"
+          or
+          realName
+          like
+          "%"#{mh}"%"
+    </select>
+
+    <!--获取最大行数-->
+    <select id="getCount" resultType="int">
+        select
+        count(loginName)
+        from
+        tb_user
+    </select>
+
+    <!--根据当前操作的用户名查询对应的用户id-->
+    <select id="getUserIdByLoginName" parameterType="string" resultType="int">
+        select userId from tb_user where loginName=#{loginName}
+    </select>
+
+    <!--添加新的用户角色信息-->
+    <insert id="addNewUser" parameterType="com.qf.pojo.SysUser">
+        insert
+        into
+        tb_user
+        values
+        (#{userId},#{loginName},#{password},#{state},#{createTime},#{realName},#{email})
+    </insert>
+
+    <!--添加新的用户角色信息到关系表中-->
+    <insert id="addNewUserRole" parameterType="int">
+        insert
+        into
+        tb_user_role
+        values
+        (#{userId},2)
+    </insert>
+
+    <!--通过登录用户名修改对应的用户的密码-->
+    <update id="upPasswordByLoginName" parameterType="com.qf.pojo.SysUser">
+        update
+        tb_user
+        set
+        password=#{password}
+        where
+        loginName=#{loginName}
+    </update>
+
+    <!--通过用户id修改对应用户的信息-->
+    <update id="upSysUserByUserId" parameterType="com.qf.pojo.SysUser">
+        update
+        tb_user
+        set
+        loginName=#{loginName},
+        password=#{password},
+        email=#{email}
+        where
+        userId=#{userId}
+    </update>
+
+    <!--通过用户id删除对应的用户信息-->
+    <delete id="deleteByUserId" parameterType="int">
+        delete
+        from
+        tb_user
+        where
+        userId=#{userId}
+    </delete>
+
+    <!--通过用户id删除对应的角色用户关系表中的数据-->
+    <delete id="deleteUserRoleByUserId" parameterType="int">
+        delete
+        from
+        tb_user_role
+        where
+        userId=#{userId}
+    </delete>
+</mapper>

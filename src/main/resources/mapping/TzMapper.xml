@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mapping映射规范
+   1、mapper节点的namespace书写
+   2、resultMape作用
+   3、sql指令，它的参数包括id、parametermap/type、resultMap/type
+-->
+<mapper namespace="com.qf.mapper.TzMapper">
+   <!--根据登录用户名查询对应的用户的投资信息-->
+    <select id="loadTzByLoginName" parameterType="string" resultType="com.qf.pojo.Tz">
+        select
+         *
+         from
+         tz
+         where
+          tzState="筹集资金"
+          and
+          id
+          in(
+          select
+           tzId
+            from
+             tb_user_tz
+              where
+               userId=(
+               select
+               userId
+               from
+               tb_user
+                where
+                loginName=
+                #{loginName}
+                ))
+    </select>
+
+    <!--通过登录用户名查询对应的用户关注的投资信息-->
+    <select id="loadTzByWTZLoginName" parameterType="string" resultType="com.qf.pojo.Tz">
+        select
+         *
+         from
+         tz
+         where
+          tzState="筹集资金"
+          and
+          id
+          in(
+          select
+           tid
+            from
+             tb_user_tz_gz
+              where
+               userId=(
+               select
+               userId
+               from
+               tb_user
+                where
+                loginName=
+                #{loginName}
+                ))
+    </select>
+
+   <!--加载所有投资信息-->
+   <select id="loadAll" resultType="com.qf.pojo.Tz">
+        select
+         *
+          from
+          tz
+   </select>
+
+ <!--将用户新的关注信息增加到关系表中-->
+  <insert id="addNewGzTz" parameterType="com.qf.pojo.Gz_Tz">
+   insert into tb_user_tz_gz values (#{userId},#{tid})
+  </insert>
+
+    <!--通过登录的用户名删除对应用户关注的投资信息-->
+    <delete id="delGzUserByLoginName" parameterType="com.qf.pojo.TzIdLoginName">
+        delete
+         from
+         tb_user_tz_gz
+         where
+         tid=#{tid}
+         and
+         userId=(
+         select
+         userId
+         from
+         tb_user
+         where
+         loginName=#{loginName})
+    </delete>
+</mapper>
